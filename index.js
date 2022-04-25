@@ -12,6 +12,12 @@ const { getTalker } = require('./fs-utils');
 const {
   isValidEmail,
   isValidPassword,
+  isValidToken,
+  isValidNewTalkerName,
+  isValidNewTalkerAge,
+  isValidNewTalkerTalk,
+  isValidNewTalkerWatchedAt,
+  isValidNewTalkerRate,
 } = require('./middlewares/validations');
 
 const PORT = '3000';
@@ -61,6 +67,20 @@ app.post(
   '/login',
   isValidEmail,
   isValidPassword,
+  (_req, res) => {
+    const token = tokenGenerator();
+    return res.status(HTTP_OK_STATUS).json({ token });
+  },
+);
+
+app.post(
+  '/talker',
+  isValidToken,
+  isValidNewTalkerName,
+  isValidNewTalkerAge,
+  isValidNewTalkerTalk,
+  isValidNewTalkerWatchedAt,
+  isValidNewTalkerRate,
   (_req, res) => {
     const token = tokenGenerator();
     return res.status(HTTP_OK_STATUS).json({ token });
