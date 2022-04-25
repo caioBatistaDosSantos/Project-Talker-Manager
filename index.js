@@ -4,13 +4,29 @@ const bodyParser = require('body-parser');
 const app = express();
 app.use(bodyParser.json());
 
+const {
+  HTTP_OK_STATUS,
+  HTTP_NOT_FOUND_STATUS,
+} = require('./HTTP-status');
 const { getTalker } = require('./fs-utils');
+const {
+  isValidEmail,
+  isValidPassword,
+} = require('./middlewares/validations');
 
-const HTTP_OK_STATUS = 200;
-const HTTP_NOT_FOUND_STATUS = 404;
 const PORT = '3000';
-const MESSAGE_NOT_FOUND = {
+const MESSAGE_NOT_FOUND_TALKER = {
   message: 'Pessoa palestrante não encontrada',
+};
+
+const tokenGenerator = () => {
+  const tokenActualy = JSON.stringify(Math.floor(Math.random() * 10000000000000000));
+
+  if (tokenActualy.length <= 15) {
+    return tokenGenerator();
+  }
+
+  return tokenActualy;
 };
 
 // não remova esse endpoint, e para o avaliador funcionar
@@ -35,11 +51,21 @@ app.get('/talker/:id', async (req, res) => {
   const speaker = SPEAKERS.find((e) => e.id === Number(id));
 
   if (!speaker) {
-    return res.status(HTTP_NOT_FOUND_STATUS).json(MESSAGE_NOT_FOUND);
+    return res.status(HTTP_NOT_FOUND_STATUS).json(MESSAGE_NOT_FOUND_TALKER);
   }
 
   return res.status(HTTP_OK_STATUS).json(speaker);
 });
+
+app.post(
+  '/login',
+  isValidEmail,
+  isValidPassword,
+  (_req, res) => {
+    const token = tokenGenerator();
+    return res.status(HTTP_OK_STATUS).json({ token });
+  },
+);
 
 app.listen(PORT, () => {
   console.log('Online');
