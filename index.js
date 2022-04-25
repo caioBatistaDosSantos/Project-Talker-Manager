@@ -4,35 +4,11 @@ const bodyParser = require('body-parser');
 const app = express();
 app.use(bodyParser.json());
 
+const { getTalker } = require('./fs-utils');
+
 const HTTP_OK_STATUS = 200;
 const HTTP_NOT_FOUND_STATUS = 404;
 const PORT = '3000';
-const SPEAKERS = [
-  {
-    name: 'Henrique Albuquerque',
-    age: 62,
-    id: 1,
-    talk: { watchedAt: '23/10/2020', rate: 5 },
-  },
-  {
-    name: 'Heloísa Albuquerque',
-    age: 67,
-    id: 2,
-    talk: { watchedAt: '23/10/2020', rate: 5 },
-  },
-  {
-    name: 'Ricardo Xavier Filho',
-    age: 33,
-    id: 3,
-    talk: { watchedAt: '23/10/2020', rate: 5 },
-  },
-  {
-    name: 'Marcos Costa',
-    age: 24,
-    id: 4,
-    talk: { watchedAt: '23/10/2020', rate: 5 },
-  },
-];
 const MESSAGE_NOT_FOUND = {
   message: 'Pessoa palestrante não encontrada',
 };
@@ -42,7 +18,9 @@ app.get('/', (_request, response) => {
   response.status(HTTP_OK_STATUS).send();
 });
 
-app.get('/talker', (_req, res) => {
+app.get('/talker', async (_req, res) => {
+  const SPEAKERS = await getTalker();
+
   if (SPEAKERS.length <= 0) {
     return res.status(HTTP_OK_STATUS).json([]);
   }
@@ -50,8 +28,10 @@ app.get('/talker', (_req, res) => {
   return res.status(HTTP_OK_STATUS).json(SPEAKERS);
 });
 
-app.get('/talker/:id', (req, res) => {
+app.get('/talker/:id', async (req, res) => {
+  const SPEAKERS = await getTalker();
   const { id } = req.params;
+
   const speaker = SPEAKERS.find((e) => e.id === Number(id));
 
   if (!speaker) {
