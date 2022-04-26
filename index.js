@@ -6,9 +6,10 @@ app.use(bodyParser.json());
 
 const {
   HTTP_OK_STATUS,
+  HTTP_CREATED_STATUS,
   HTTP_NOT_FOUND_STATUS,
 } = require('./HTTP-status');
-const { getTalker } = require('./fs-utils');
+const { getTalker, setTalker } = require('./fs-utils');
 const {
   isValidEmail,
   isValidPassword,
@@ -16,6 +17,7 @@ const {
   isValidNewTalkerName,
   isValidNewTalkerAge,
   isValidNewTalkerTalk,
+  isValidNewTalkerWatchedAtLength,
   isValidNewTalkerWatchedAt,
   isValidNewTalkerRate,
 } = require('./middlewares/validations');
@@ -79,11 +81,24 @@ app.post(
   isValidNewTalkerName,
   isValidNewTalkerAge,
   isValidNewTalkerTalk,
+  isValidNewTalkerWatchedAtLength,
   isValidNewTalkerWatchedAt,
   isValidNewTalkerRate,
-  (_req, res) => {
-    const token = tokenGenerator();
-    return res.status(HTTP_OK_STATUS).json({ token });
+  async (req, res) => {
+    const currentTalker = req.body;
+    const SPEAKERS = await getTalker();
+
+    const newId = (SPEAKERS.reduce((acc, curr) => {
+      if (curr.id > acc) return curr.id;
+      return acc;
+    }, 0)) + 1;
+
+    const newTalker = { id: newId, ...currentTalker };
+
+    SPEAKERS.push(newTalker);
+    await setTalker(SPEAKERS);
+  
+    return res.status(HTTP_CREATED_STATUS).json(newTalker);
   },
 );
 

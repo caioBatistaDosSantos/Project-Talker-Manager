@@ -94,6 +94,13 @@ const isValidNewTalkerAge = (req, res, next) => {
 
 const isValidNewTalkerTalk = (req, res, next) => {
   const { talk } = req.body;
+
+  if (!talk) {
+    return res.status(HTTP_BAD_REEQUEST_STATUS).json({
+      message: 'O campo "talk" é obrigatório e "watchedAt" e "rate" não podem ser vazios',
+    });
+  } 
+
   const { watchedAt, rate } = talk;
 
   if (!watchedAt || !rate) {
@@ -108,24 +115,38 @@ const isValidNewTalkerTalk = (req, res, next) => {
 const validateDay = (day) => {
   if (!day || Number.isNaN(day)) return true;
   if (day <= 0 || day >= 32) return true;
-  console.log('passou funcao dias')
+
   return false;
 };
 
 const validateMonth = (month) => {
   if (!month || Number.isNaN(month)) return true;
   if (month <= 0 || month >= 13) return true;
-  console.log('passou funcao meses')
+
   return false;
 };
 
 const validateYear = (year) => {
   if (!year || Number.isNaN(year)) return true;
-  console.log('funcao anos primeira parte')
-  if (year <= 0 || year >= 13) return true;
-  console.log('passou funcao anos')
 
   return false;
+};
+
+const isValidNewTalkerWatchedAtLength = (req, res, next) => {
+
+  const { talk } = req.body;
+  const { watchedAt } = talk;
+
+  const date = watchedAt.split('/');
+
+  if (
+    date.length !== 3
+    || date[0].length !== 2
+    || date[1].length !== 2
+    || date[2].length !== 4
+  ) return res.status(HTTP_BAD_REEQUEST_STATUS).json(MESSAGE_VALIDATE_WATCHED);
+
+  next();
 };
 
 const isValidNewTalkerWatchedAt = (req, res, next) => {
@@ -133,24 +154,20 @@ const isValidNewTalkerWatchedAt = (req, res, next) => {
   const { watchedAt } = talk;
 
   const date = watchedAt.split('/');
-
-  if (date.length !== 3) return res.status(HTTP_BAD_REEQUEST_STATUS).json(MESSAGE_VALIDATE_WATCHED);
-
   const days = Number(date[0]);
   const months = Number(date[1]);
   const years = Number(date[2]);
-console.log('passou variaveis')
+
   if (validateDay(days) || validateMonth(months) || validateYear(years)) {
     return res.status(HTTP_BAD_REEQUEST_STATUS).json(MESSAGE_VALIDATE_WATCHED);
   }
-console.log('passou')
+
   next();
 };
 
 const isValidNewTalkerRate = (req, res, next) => {
   const { talk } = req.body;
   const { rate } = talk;
-  console.log(rate)
 
   if (rate < 1 || rate > 5) {
     return res.status(HTTP_BAD_REEQUEST_STATUS).json({
@@ -168,6 +185,7 @@ module.exports = {
   isValidNewTalkerName,
   isValidNewTalkerAge,
   isValidNewTalkerTalk,
+  isValidNewTalkerWatchedAtLength,
   isValidNewTalkerWatchedAt,
   isValidNewTalkerRate,
 };
