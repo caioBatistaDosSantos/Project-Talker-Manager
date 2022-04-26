@@ -133,7 +133,6 @@ const validateYear = (year) => {
 };
 
 const isValidNewTalkerWatchedAtLength = (req, res, next) => {
-
   const { talk } = req.body;
   const { watchedAt } = talk;
 
