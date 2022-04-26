@@ -7,6 +7,7 @@ app.use(bodyParser.json());
 const {
   HTTP_OK_STATUS,
   HTTP_CREATED_STATUS,
+  HTTP_NO_CONTENT_STATUS,
   HTTP_NOT_FOUND_STATUS,
 } = require('./HTTP-status');
 const { getTalker, setTalker } = require('./fs-utils');
@@ -125,6 +126,21 @@ app.put(
     await setTalker(newSpeakers);
   
     return res.status(HTTP_OK_STATUS).json(newTalker);
+  },
+);
+
+app.delete(
+  '/talker/:id',
+  isValidToken,
+  async (req, res) => {
+    const { id } = req.params;
+    const SPEAKERS = await getTalker();
+
+    const newSpeakers = SPEAKERS.filter((e) => e.id !== Number(id));
+
+    await setTalker(newSpeakers);
+  
+    return res.status(HTTP_NO_CONTENT_STATUS).send();
   },
 );
 
