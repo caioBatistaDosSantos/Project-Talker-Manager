@@ -43,6 +43,19 @@ app.get('/', (_request, response) => {
   response.status(HTTP_OK_STATUS).send();
 });
 
+app.get(
+  '/talker/search',
+  isValidToken,
+  async (req, res) => {
+    const { q } = req.query;
+    const SPEAKERS = await getTalker();
+
+    const allSpeakersFilters = SPEAKERS.filter((e) => e.name.includes(q));
+  
+    return res.status(HTTP_OK_STATUS).json(allSpeakersFilters);
+  },
+);
+
 app.get('/talker', async (_req, res) => {
   const SPEAKERS = await getTalker();
 
@@ -137,7 +150,6 @@ app.delete(
     const SPEAKERS = await getTalker();
 
     const newSpeakers = SPEAKERS.filter((e) => e.id !== Number(id));
-
     await setTalker(newSpeakers);
   
     return res.status(HTTP_NO_CONTENT_STATUS).send();
