@@ -102,6 +102,32 @@ app.post(
   },
 );
 
+app.put(
+  '/talker/:id',
+  isValidToken,
+  isValidNewTalkerName,
+  isValidNewTalkerAge,
+  isValidNewTalkerTalk,
+  isValidNewTalkerWatchedAtLength,
+  isValidNewTalkerWatchedAt,
+  isValidNewTalkerRate,
+  async (req, res) => {
+    const currentTalker = req.body;
+    const { id } = req.params;
+    const NumberId = Number(id);
+    const SPEAKERS = await getTalker();
+
+    const newSpeakers = SPEAKERS.filter((e) => e.id !== NumberId);
+
+    const newTalker = { id: NumberId, ...currentTalker };
+
+    newSpeakers.push(newTalker);
+    await setTalker(newSpeakers);
+  
+    return res.status(HTTP_OK_STATUS).json(newTalker);
+  },
+);
+
 app.listen(PORT, () => {
   console.log('Online');
 });
