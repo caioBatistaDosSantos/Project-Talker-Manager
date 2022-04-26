@@ -99,11 +99,11 @@ const isValidNewTalkerTalk = (req, res, next) => {
     return res.status(HTTP_BAD_REEQUEST_STATUS).json({
       message: 'O campo "talk" é obrigatório e "watchedAt" e "rate" não podem ser vazios',
     });
-  } 
+  }
 
   const { watchedAt, rate } = talk;
 
-  if (!watchedAt || !rate) {
+  if (watchedAt === undefined || rate === undefined) {
     return res.status(HTTP_BAD_REEQUEST_STATUS).json({
       message: 'O campo "talk" é obrigatório e "watchedAt" e "rate" não podem ser vazios',
     });
