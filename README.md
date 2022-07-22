@@ -1,8 +1,10 @@
 # Boas vindas ao repositório do Talker Manager!
 
 O Projeto Talker Menager foi desenvolvido para treinar meus conhecimentos em Node.js.
-Foi desenvolvido uma API fazendo um CRUD (**C**reate, **R**ead, **U**pdate e **D**elete) de palestrantes. Utilizei Expresses para os endpoints que irão ler e escrever em um arquivo, isso utilizando o módulo `fs`.
-Tive 1 dia para entrega deste projeto.
+
+Foi desenvolvido uma API fazendo um CRUD (**C**reate, **R**ead, **U**pdate e **D**elete) de palestrantes. Utilizei Express para os endpoints que irão ler e escrever em um arquivo utilizando o módulo `fs`.
+
+  - Este projeto foi individual.
 
 ---
 
