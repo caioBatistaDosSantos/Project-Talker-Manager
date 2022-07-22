@@ -29,13 +29,13 @@ Neste projeto, exercitei as habilidades:
 # Como rodar localmente...
 
 - Para rodar este projeto localmente você vai precisar ter instalado o GitHub e o Node , e basta seguir o passo a passo abaixo.
-- 1. Clone o repositório com o comando:
+1. Clone o repositório com o comando:
   - `git clone git@github.com:caioBatistaDosSantos/Project-Talker-Manager.git`;
     - Entre na pasta do repositório:
       - `cd Project-Talker-Manager`
-- 2. Instale as dependencia com o comando:
+2. Instale as dependencia com o comando:
   - `npm install`
-- 3. Por fim inicie a aplicação com o comando:
+3. Por fim inicie a aplicação com o comando:
   - `npm start`
 
 ---
